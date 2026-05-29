@@ -240,3 +240,4 @@ string[] backendCourses = ["C#", "ASP.NET Core"];
 string[] frontendCourses = ["TypeScript", "Angular"];
 string[] allCourses = [.. backendCourses, .. frontendCourses, "Capstone"];
 Console.WriteLine($"\nFull curriculum: {string.Join(", ", allCourses)}");
+//end of module session 2 

@@ -14,10 +14,11 @@ public class EnrollmentService
         {
             >= 3.5m => "Honors",
             >= 2.5m => "Good Standing",
-            _       => "Academic Warning"
+            _ => "Academic Warning"
         };
         Console.WriteLine($"{student.Name} is in {standing}.");
 
         return new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow);
     }
 }
+//end of module session 2

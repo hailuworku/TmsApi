@@ -93,3 +93,4 @@ public class LabAssignment : IGradable
         return (FunctionalityScore * 0.7m) + (CodeQualityScore * 0.3m);
     }
 }
+//end of module 1 session 2 
