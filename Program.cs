@@ -12,6 +12,8 @@
 
 // '?' means: "this variable is allowed to be null"
 string? region = null;
+//how to create console log 
+
 
 // '?.' null-conditional: skips ToUpper() if region is null — no crash
 string? upperRegion = region?.ToUpper();
