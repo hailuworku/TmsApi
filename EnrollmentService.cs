@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TmsApi
 {
-    // IEnrollmentService Interface) 
+    // 1. የአገልግሎቱ የጋራ ውል (IEnrollmentService Interface) - Page 90
     public interface IEnrollmentService
     {
         Task<EnrollmentRecord> EnrollAsync(string studentId, string courseCode);
@@ -15,7 +15,7 @@ namespace TmsApi
         Task<bool> DeleteAsync(string id);
     }
 
-    // EnrollmentService Implementation) 
+    // 2. የአገልግሎቱ ተግባራዊ ክላስ (EnrollmentService Implementation) - Page 90
     public class EnrollmentService : IEnrollmentService
     {
         private readonly Dictionary<string, EnrollmentRecord> _store = new();
@@ -28,20 +28,20 @@ namespace TmsApi
 
         public Task<EnrollmentRecord> EnrollAsync(string studentId, string courseCode)
         {
-            // confirm that the student is not already enrolled in the course
+            // ሀ. ተማሪው አስቀድሞ በዚያው ኮርስ ላይ መመዝገቡን ቼክ ማድረግ (Duplicate Check) - Page 95
             var existing = _store.Values
                 .FirstOrDefault(e => e.StudentId == studentId && e.CourseCode == courseCode);
 
             if (existing is not null)
             {
-                // LogWarning using Structured Template) 
+                // ለ. የማስጠንቀቂያ ሎግ መጻፍ (LogWarning using Structured Template) - Page 95
                 _logger.LogWarning("Duplicate enrollment attempt {StudentId} already in {CourseCode} (record {EnrollmentId})",
                     studentId, courseCode, existing.Id);
 
                 return Task.FromResult(existing);
             }
 
-            //new enrollment
+            // ሐ. አዲስ ምዝገባ ማከናወን - Page 95
             var id = Guid.NewGuid().ToString("N")[..8];
             var record = new EnrollmentRecord(id, studentId, courseCode, DateTime.UtcNow);
             _store[id] = record;
@@ -56,7 +56,7 @@ namespace TmsApi
         {
             _store.TryGetValue(id, out var record);
 
-            // log the outcome of the retrieval attempt
+            // መዝገቡ ካልተገኘ የማስጠንቀቂያ ሎግ መጻፍ - Page 96
             if (record is null)
             {
                 _logger.LogWarning("Enrollment {EnrollmentId} not found", id);
@@ -75,7 +75,7 @@ namespace TmsApi
         {
             var removed = _store.Remove(id);
 
-            // log the outcome of the delete operation
+            // መሰረዙ ከተሳካ የኢንፎርሜሽን ሎግ፣ ካልተሳካ ግን የማስጠንቀቂያ ሎግ መጻፍ - Page 96
             if (removed)
             {
                 _logger.LogInformation("Deleted enrollment {EnrollmentId}", id);
@@ -89,6 +89,6 @@ namespace TmsApi
         }
     }
 
-    //EnrollmentRecord) 
+    // 3. የኢንሮልመንት ዳታ ቅርጽ (EnrollmentRecord) - Page 91
     public record EnrollmentRecord(string Id, string StudentId, string CourseCode, DateTime EnrolledAt);
 }
