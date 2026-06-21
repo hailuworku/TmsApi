@@ -15,7 +15,7 @@ builder.Services.AddAuthorization();
 
 // 2. የሰርቪስ lifetimes መመዝገብ
 builder.Services.AddSingleton<EnrollmentWorker>();
-builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddSingleton<IEnrollmentService, EnrollmentService>();
 
 // 3. ኮንትሮለሮችን (Controllers) መመዝገብ - Page 98
 builder.Services.AddControllers();
