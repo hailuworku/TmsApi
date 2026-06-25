@@ -10,6 +10,7 @@ public class Student
 
     public decimal GPA { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsDeleted { get; set; } = false;
 
     public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 }

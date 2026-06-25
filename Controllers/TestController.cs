@@ -1,158 +1,65 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using TmsApi.Data;
+using TmsApi.Entities;
 
-namespace TmsApi.Controllers;
+namespace TmsApi.Data;
 
-[ApiController]
-[Route("api/test")]
-public class TestController : ControllerBase
+public class TmsDbContext : DbContext
 {
-    private readonly TmsDbContext _context;
+    public TmsDbContext(DbContextOptions<TmsDbContext> options) : base(options) { }
 
-    public TestController(TmsDbContext context)
+    public DbSet<Student> Students => Set<Student>();
+    public DbSet<Course> Courses => Set<Course>();
+    public DbSet<Enrollment> Enrollments => Set<Enrollment>();
+    public DbSet<Assessment> Assessments => Set<Assessment>();
+    public DbSet<Certificate> Certificates => Set<Certificate>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        _context = context;
-    }
+        base.OnModelCreating(modelBuilder);
 
-    // ==========================================
-    // SESSION 1 EXPERIMENTS & QUERIES
-    // ==========================================
+        // 1. Automatically discovers and applies configurations (IEntityTypeConfiguration) - Page 2
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TmsDbContext).Assembly);
 
-    // 1. Deferred Execution Experiment - Page 117
-    [HttpGet("deferred")]
-    public IActionResult TestDeferred()
-    {
-        Console.WriteLine("\n>>> STEP 1: Building the query object (no database contact)...");
-        var query = _context.Students.Where(s => s.GPA >= 3.0m);
-
-        Console.WriteLine(">>> STEP 2: Appending a sorting clause...");
-        var orderedQuery = query.OrderBy(s => s.Name);
-
-        Console.WriteLine(">>> STEP 3: Materializing query into a C# List...");
-        var results = orderedQuery.ToList(); // Database query is triggered here
-
-        Console.WriteLine(">>> STEP 4: Materialization finished. List populated.\n");
-        return Ok(results);
-    }
-
-    // 2. Translation Failure Experiment - Page 118
-    [HttpGet("translation-fail")]
-    public IActionResult TestTranslationFail()
-    {
-        Console.WriteLine("\n>>> STEP 1: Running non-translatable query...");
-        try
+        // 2. Configure advanced Student mappings - Page 4, 5
+        modelBuilder.Entity<Student>(builder =>
         {
-            var students = _context.Students
-                .Where(s => IsHonorRoll(s.GPA)) // Fails because C# method cannot be translated to SQL
-                .ToList();
-            return Ok(students);
-        }
-        catch (Exception ex)
+            // Exercise 8: Configure shadow property for audit trail stamp [4]
+            builder.Property<DateTime>("LastUpdated");
+
+            // Exercise 8: Configure system row version (xmin) for concurrency checks [4, 5]
+            builder.Property(s => s.Version).IsRowVersion();
+
+            // Exercise 9: Configure global soft-delete query filter [5]
+            builder.HasQueryFilter(s => !s.IsDeleted);
+        });
+    }
+
+    // --- Automatic Audit Stamping --- - Page 4
+    public override int SaveChanges()
+    {
+        StampAuditProperties();
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        StampAuditProperties();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void StampAuditProperties()
+    {
+        var entries = ChangeTracker.Entries()
+            .Where(e => e.Entity is Student && (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+        foreach (var entry in entries)
         {
-            Console.WriteLine($">>> EXCEPTION CAUGHT: {ex.Message}\n");
-            return BadRequest(new { Message = ex.Message });
+            // Automatically set LastUpdated shadow property before saving - Page 4
+            entry.Property("LastUpdated").CurrentValue = DateTime.UtcNow;
         }
-    }
-
-    // 3. Query 1: Active students with GPA >= 3.0 - Page 119
-    [HttpGet("active-high-gpa-count")]
-    public async Task<IActionResult> GetActiveHighGpaCount()
-    {
-        var count = await _context.Students
-            .Where(s => s.IsActive && s.GPA >= 3.0m)
-            .CountAsync();
-
-        return Ok(new { Count = count });
-    }
-
-    // 4. Query 2: Courses with most enrollments - Page 119
-    [HttpGet("courses-by-enrollments")]
-    public async Task<IActionResult> GetCoursesByEnrollments()
-    {
-        var list = await _context.Courses
-            .Select(c => new
-            {
-                c.Title,
-                EnrollmentCount = c.Enrollments.Count
-            })
-            .OrderByDescending(x => x.EnrollmentCount)
-            .ToListAsync();
-
-        return Ok(list);
-    }
-
-    // 5. Query 3: Average GPA per course - Page 120
-    [HttpGet("average-gpa-per-course")]
-    public async Task<IActionResult> GetAverageGpaPerCourse()
-    {
-        var list = await _context.Enrollments
-            .GroupBy(e => e.Course.Title)
-            .Select(g => new
-            {
-                Course = g.Key,
-                AverageGPA = g.Average(e => e.Student.GPA)
-            })
-            .ToListAsync();
-
-        return Ok(list);
-    }
-
-    // 6. Query 4: Students with zero enrollments - Page 120
-    [HttpGet("students-zero-enrollments")]
-    public async Task<IActionResult> GetStudentsZeroEnrollments()
-    {
-        var list = await _context.Students
-            .Where(s => !s.Enrollments.Any())
-            .Select(s => s.Name)
-            .ToListAsync();
-
-        return Ok(list);
-    }
-
-    // --- Helper Method for Translation Fail --- - Page 5
-    private static bool IsHonorRoll(decimal gpa)
-    {
-        return gpa >= 3.5m;
-    }
-    // --- Exercise 3: Part 1 - Database-Level Pagination --- - Page 2
-    [HttpGet("students-paged")]
-    public async Task<IActionResult> GetStudentsPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
-    {
-        Console.WriteLine("\n>>> RUNNING DATABASE-LEVEL PAGINATION...");
-
-        // Always use OrderBy before Skip/Take for a stable database sort - Page 2
-        var pagedStudents = await _context.Students
-            .AsNoTracking()
-            .OrderBy(s => s.Name)
-            .Skip((page - 1) * pageSize) // Translates to OFFSET in SQL [4]
-            .Take(pageSize)              // Translates to LIMIT in SQL [4]
-            .ToListAsync();
-
-        return Ok(pagedStudents);
-    }
-
-    // --- Exercise 3: Part 2 - Top Courses by Enrollment GroupBy --- - Page 2
-    [HttpGet("top-courses")]
-    public async Task<IActionResult> GetTopCourses()
-    {
-        Console.WriteLine("\n>>> RUNNING GROUPBY COURSE AGGREGATION...");
-
-        // Groups enrollments by Course Title and selects the top 5 sorted by count - Page 2
-        var topCourses = await _context.Enrollments
-            .GroupBy(e => e.Course.Title)
-            .Select(g => new
-            {
-                CourseTitle = g.Key,
-                EnrollmentCount = g.Count()
-            })
-            .OrderByDescending(x => x.EnrollmentCount)
-            .Take(5) // Translates to LIMIT 5 in SQL [2, 4]
-            .ToListAsync();
-
-        return Ok(topCourses);
     }
 }

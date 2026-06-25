@@ -10,4 +10,6 @@ public class Enrollment
     public DateTime EnrolledAt { get; set; }
     public Student Student { get; set; } = null!;
     public Course Course { get; set; } = null!;
+    public bool IsDeleted { get; set; } = false;
+
 }
