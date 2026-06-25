@@ -18,8 +18,8 @@ namespace TmsApi.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Capacity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -33,8 +33,9 @@ namespace TmsApi.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RegistrationNumber = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Version = table.Column<long>(type: "bigint", nullable: false),
+                    RegistrationNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     GPA = table.Column<decimal>(type: "numeric", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -62,7 +63,7 @@ namespace TmsApi.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Enrollments_Students_StudentId",
                         column: x => x.StudentId,

@@ -14,7 +14,7 @@ public class TmsDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         // Automatically discovers and applies all configurations (IEntityTypeConfiguration) in this assembly - Page 2
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TmsDbContext).Assembly);
     }

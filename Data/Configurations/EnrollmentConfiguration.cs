@@ -10,7 +10,7 @@ public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
     {
         builder.HasKey(e => e.Id); // Configures 'Id' as the primary key [3]
 
-        // Configure explicit relationships and delete behaviors - Page 3
+        // Exercise 5: Configure explicit relationships and delete behaviors - Page 3
         builder.HasOne(e => e.Student)
                .WithMany(s => s.Enrollments)
                .HasForeignKey(e => e.StudentId)

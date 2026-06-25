@@ -118,4 +118,41 @@ public class TestController : ControllerBase
     {
         return gpa >= 3.5m;
     }
+    // --- Exercise 3: Part 1 - Database-Level Pagination --- - Page 2
+    [HttpGet("students-paged")]
+    public async Task<IActionResult> GetStudentsPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    {
+        Console.WriteLine("\n>>> RUNNING DATABASE-LEVEL PAGINATION...");
+
+        // Always use OrderBy before Skip/Take for a stable database sort - Page 2
+        var pagedStudents = await _context.Students
+            .AsNoTracking()
+            .OrderBy(s => s.Name)
+            .Skip((page - 1) * pageSize) // Translates to OFFSET in SQL [4]
+            .Take(pageSize)              // Translates to LIMIT in SQL [4]
+            .ToListAsync();
+
+        return Ok(pagedStudents);
+    }
+
+    // --- Exercise 3: Part 2 - Top Courses by Enrollment GroupBy --- - Page 2
+    [HttpGet("top-courses")]
+    public async Task<IActionResult> GetTopCourses()
+    {
+        Console.WriteLine("\n>>> RUNNING GROUPBY COURSE AGGREGATION...");
+
+        // Groups enrollments by Course Title and selects the top 5 sorted by count - Page 2
+        var topCourses = await _context.Enrollments
+            .GroupBy(e => e.Course.Title)
+            .Select(g => new
+            {
+                CourseTitle = g.Key,
+                EnrollmentCount = g.Count()
+            })
+            .OrderByDescending(x => x.EnrollmentCount)
+            .Take(5) // Translates to LIMIT 5 in SQL [2, 4]
+            .ToListAsync();
+
+        return Ok(topCourses);
+    }
 }
