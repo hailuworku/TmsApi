@@ -33,15 +33,67 @@ namespace TmsApi.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Version = table.Column<long>(type: "bigint", nullable: false),
                     RegistrationNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     GPA = table.Column<decimal>(type: "numeric", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Assessments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    MaxScore = table.Column<decimal>(type: "numeric", nullable: false),
+                    Weight = table.Column<decimal>(type: "numeric", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Assessments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Assessments_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Certificates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SerialNumber = table.Column<string>(type: "text", nullable: false),
+                    IssuedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StudentId = table.Column<int>(type: "integer", nullable: false),
+                    CourseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Certificates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Certificates_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Certificates_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +105,8 @@ namespace TmsApi.Migrations
                     StudentId = table.Column<int>(type: "integer", nullable: false),
                     CourseId = table.Column<int>(type: "integer", nullable: false),
                     Grade = table.Column<decimal>(type: "numeric", nullable: true),
-                    EnrolledAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    EnrolledAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsArchived = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,6 +126,21 @@ namespace TmsApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Assessments_CourseId",
+                table: "Assessments",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Certificates_CourseId",
+                table: "Certificates",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Certificates_StudentId",
+                table: "Certificates",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enrollments_CourseId",
                 table: "Enrollments",
                 column: "CourseId");
@@ -86,6 +154,12 @@ namespace TmsApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Assessments");
+
+            migrationBuilder.DropTable(
+                name: "Certificates");
+
             migrationBuilder.DropTable(
                 name: "Enrollments");
 
