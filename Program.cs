@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using TmsApi.Data;
 using TmsApi.Entities;
 using TmsApi.Services;
+using TmsApi.Authentications;
+using TmsApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
