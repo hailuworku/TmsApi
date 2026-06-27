@@ -13,5 +13,7 @@ public class CourseConfiguration : IEntityTypeConfiguration<Course>
         // Enforce maximum string lengths and required constraints
         builder.Property(c => c.Code).HasMaxLength(20).IsRequired();
         builder.Property(c => c.Title).HasMaxLength(200).IsRequired();
+        builder.Property(c => c.MaxCapacity).IsRequired(); // 
+        builder.HasIndex(c => c.Code).IsUnique(); // 
     }
 }

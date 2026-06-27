@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TmsApi.Data;
 using TmsApi.Entities;
+using TmsApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddAuthentication("Training")
 builder.Services.AddAuthorization();
 
 // 1. ADD THIS: Register MVC Controllers - Page 98
+builder.Services.AddProblemDetails(); // tell problem hapen i front end
 builder.Services.AddControllers();
 
 // Register TmsDbContext with Npgsql and Console Logging - Page 115
@@ -26,10 +28,15 @@ builder.Services.AddDbContext<TmsDbContext>(options =>
         .LogTo(Console.WriteLine, LogLevel.Information)
         .EnableSensitiveDataLogging());
 
+//to comunicate each others
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 var app = builder.Build();
 
 // Use the request logging middleware - Page 84
 app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseExceptionHandler();    // 
+app.UseStatusCodePages();     // 
 
 app.UseRouting();
 app.UseAuthentication();
@@ -64,9 +71,9 @@ using (var scope = app.Services.CreateScope())
         ctx.Students.AddRange(students);
 
         var courses = new List<Course> {
-            new() { Code="CS-101", Title="Introduction to Computer Science", Capacity=30 },
-            new() { Code="CS-201", Title="Data Structures and Algorithms",   Capacity=25 },
-            new() { Code="MAT-101", Title="Calculus I",                      Capacity=40 }
+            new() { Code="CS-101", Title="Introduction to Computer Science", MaxCapacity=30 },
+            new() { Code="CS-201", Title="Data Structures and Algorithms",   MaxCapacity=25 },
+            new() { Code="MAT-101", Title="Calculus I",                      MaxCapacity=40 }
         };
         ctx.Courses.AddRange(courses);
         ctx.SaveChanges(); // Students and Courses get IDs here [116]
