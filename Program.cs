@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.OpenApi;
+using Scalar.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,8 @@ using TmsApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 // Add authentication and authorization services
 builder.Services.AddAuthentication("Training")
     .AddScheme<AuthenticationSchemeOptions, TrainingAuthHandler>("Training", null);
@@ -23,6 +27,7 @@ builder.Services.AddAuthorization();
 // 1. ADD THIS: Register MVC Controllers - Page 98
 builder.Services.AddProblemDetails(); // tell problem hapen i front end
 builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 // Register TmsDbContext with Npgsql and Console Logging - Page 115
 builder.Services.AddDbContext<TmsDbContext>(options =>
@@ -32,7 +37,7 @@ builder.Services.AddDbContext<TmsDbContext>(options =>
 
 //to comunicate each others
 builder.Services.AddScoped<ICourseService, CourseService>();
-builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentService>(); 
 var app = builder.Build();
 
 // Use the request logging middleware - Page 84
@@ -45,6 +50,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // 2. ADD THIS: Map MVC Controllers - Page 98
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();           // <--- እዚህ ጋር (ደረጃ 4)
+    app.MapScalarApiReference(); // <--- እዚህ ጋር (ደረጃ 4)
+    
+    // ... Seeder ኮድ ...
+}
+
 app.MapControllers();
 
 // Protected endpoint - Page 88
