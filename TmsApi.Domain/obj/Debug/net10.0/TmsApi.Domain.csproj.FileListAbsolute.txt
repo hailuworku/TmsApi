@@ -1,0 +1,11 @@
+D:\Qiyas\TmsCore\TmsApi.Domain\bin\Debug\net10.0\TmsApi.Domain.deps.json
+D:\Qiyas\TmsCore\TmsApi.Domain\bin\Debug\net10.0\TmsApi.Domain.dll
+D:\Qiyas\TmsCore\TmsApi.Domain\bin\Debug\net10.0\TmsApi.Domain.pdb
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.AssemblyInfoInputs.cache
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.AssemblyInfo.cs
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.csproj.CoreCompileInputs.cache
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.dll
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\refint\TmsApi.Domain.dll
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.pdb
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\ref\TmsApi.Domain.dll
