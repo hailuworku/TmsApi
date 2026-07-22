@@ -20,5 +20,6 @@ public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
                .WithMany(c => c.Enrollments)
                .HasForeignKey(e => e.CourseId)
                .OnDelete(DeleteBehavior.Restrict); // 👈 Deleting a course is BLOCKED if active enrollments exist [3]
+               builder.HasQueryFilter(e => !e.Student.IsDeleted  );
     }
 }

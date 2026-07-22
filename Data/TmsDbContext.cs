@@ -36,6 +36,9 @@ public class TmsDbContext : DbContext
             // Exercise 9: Configure global soft-delete query filter [5]
             builder.HasQueryFilter(s => !s.IsDeleted);
         });
+    modelBuilder.Entity<Certificate>().HasQueryFilter(c => !c.Student.IsDeleted);
+    modelBuilder.Entity<Enrollment>().HasQueryFilter(e => !e.Student.IsDeleted);
+    modelBuilder.Entity<Assessment>().HasQueryFilter(a => !a.Course.Enrollments.Any(e => e.Student.IsDeleted)); 
     }
 
     // --- Automatic Audit Stamping --- - Page 4
