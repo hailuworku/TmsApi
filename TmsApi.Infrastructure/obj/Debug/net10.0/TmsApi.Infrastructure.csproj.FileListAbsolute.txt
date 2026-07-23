@@ -15,3 +15,4 @@ D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.d
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\refint\TmsApi.Infrastructure.dll
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.pdb
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\ref\TmsApi.Infrastructure.dll
+D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.sourcelink.json

@@ -9,3 +9,4 @@ D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.dll
 D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\refint\TmsApi.Domain.dll
 D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.pdb
 D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\ref\TmsApi.Domain.dll
+D:\Qiyas\TmsCore\TmsApi.Domain\obj\Debug\net10.0\TmsApi.Domain.sourcelink.json

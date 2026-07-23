@@ -13,3 +13,4 @@ D:\Qiyas\TmsCore\TmsApi.Application\obj\Debug\net10.0\TmsApi.Application.dll
 D:\Qiyas\TmsCore\TmsApi.Application\obj\Debug\net10.0\refint\TmsApi.Application.dll
 D:\Qiyas\TmsCore\TmsApi.Application\obj\Debug\net10.0\TmsApi.Application.pdb
 D:\Qiyas\TmsCore\TmsApi.Application\obj\Debug\net10.0\ref\TmsApi.Application.dll
+D:\Qiyas\TmsCore\TmsApi.Application\obj\Debug\net10.0\TmsApi.Application.sourcelink.json
