@@ -10,9 +10,9 @@ D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.G
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.AssemblyInfoInputs.cache
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.AssemblyInfo.cs
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.csproj.CoreCompileInputs.cache
+D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.sourcelink.json
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.I.261095D6.Up2Date
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.dll
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\refint\TmsApi.Infrastructure.dll
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.pdb
 D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\ref\TmsApi.Infrastructure.dll
-D:\Qiyas\TmsCore\TmsApi.Infrastructure\obj\Debug\net10.0\TmsApi.Infrastructure.sourcelink.json

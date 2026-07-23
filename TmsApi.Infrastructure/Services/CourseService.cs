@@ -73,4 +73,10 @@ public async Task<bool> DeleteAsync(int id, CancellationToken ct)
     await context.SaveChangesAsync(ct);
     return true;
 }
+public async Task<Course?> GetByCodeAsync(string code, CancellationToken ct)
+{
+    return await context.Courses
+        .Include(c => c.Enrollments) // to create student
+        .FirstOrDefaultAsync(c => c.Code == code, ct);
+}
 }

@@ -15,4 +15,8 @@ public interface IEnrollmentService
 
     // 4. Delete/Drop an enrollment (DELETE)
     Task<bool> DeleteAsync(int courseId, int id, CancellationToken ct);
+    // ለ Exercise 2 MediatR የሚያስፈልጉ
+Task<bool> ExistsAsync(int studentId, string courseCode, CancellationToken ct);
+Task AddAsync(TmsApi.Domain.Entities.Enrollment enrollment, CancellationToken ct);
+    
 }

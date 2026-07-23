@@ -67,4 +67,16 @@ public class EnrollmentService(TmsDbContext context) : IEnrollmentService
         await context.SaveChangesAsync(ct);
         return true;
     }
+    public async Task<bool> ExistsAsync(int studentId, string courseCode, CancellationToken ct)
+{
+    // ተማሪው በዚህ ኮድ ባለው ኮርስ ላይ አስቀድሞ መኖሩን ያረጋግጣል
+    return await context.Enrollments
+        .AnyAsync(e => e.StudentId == studentId && e.Course.Code == courseCode, ct);
+}
+
+public async Task AddAsync(Enrollment enrollment, CancellationToken ct)
+{
+    context.Enrollments.Add(enrollment);
+    await context.SaveChangesAsync(ct);
+}
 } 
