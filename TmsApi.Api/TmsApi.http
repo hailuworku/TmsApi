@@ -1,0 +1,8 @@
+@TmsApi_HostAddress = http://localhost:5158
+###
+
+GET {{TmsApi_HostAddress}}/api/assessments/results 
+Accept: application/json
+
+###
+POST {{TmsApi_HostAddress}}/api/test/update-gpa/1?gpa=3.95
